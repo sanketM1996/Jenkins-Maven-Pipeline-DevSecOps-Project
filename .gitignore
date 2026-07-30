@@ -1,0 +1,121 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+# =========================
+# Maven
+# =========================
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Maven Wrapper
+.mvn/wrapper/maven-wrapper.properties
+
+# =========================
+# Spring Boot
+# =========================
+*.log
+*.out
+
+# =========================
+# IDE - IntelliJ IDEA
+# =========================
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# =========================
+# IDE - Eclipse / STS
+# =========================
+.classpath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# Java
+# =========================
+*.class
+*.jar
+*.war
+*.ear
+
+# =========================
+# OS Generated Files
+# =========================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# =========================
+# Temporary Files
+# =========================
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# =========================
+# Environment / Secrets
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Spring Configuration
+# Keep example configs in Git
+# =========================
+application-local.properties
+application-local.yml
+application-dev-local.properties
+application-dev-local.yml
+
+# =========================
+# Build / Coverage
+# =========================
+coverage/
+*.exec
+
+# =========================
+# Generated Files
+# =========================
+generated-sources/
+generated-test-sources/

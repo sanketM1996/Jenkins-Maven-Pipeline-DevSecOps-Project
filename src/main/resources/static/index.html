@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f4f9; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #333; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; }
+        .form-group input { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { padding: 10px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .error { color: red; font-size: 0.9em; margin-top: 5px; display: block; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f8f9fa; }
+
+        .pagination { margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Product Manager</h1>
+
+    <!-- Add Product Form -->
+    <h2>Add New Product</h2>
+    <form id="productForm">
+        <div class="form-group">
+            <label for="name">Product Name:</label>
+            <input type="text" id="name" placeholder="Enter product name">
+            <span id="nameError" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label for="price">Price ($):</label>
+            <input type="number" id="price" step="0.01" placeholder="Enter positive price">
+            <span id="priceError" class="error"></span>
+        </div>
+        <button type="submit">Save Product</button>
+    </form>
+
+    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
+
+    <!-- Product List -->
+    <h2>Product Inventory</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+        </tr>
+        </thead>
+        <tbody id="productTableBody">
+        <!-- Data will be injected here by JavaScript -->
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div class="pagination">
+        <button id="prevBtn" onclick="changePage(-1)" disabled>Previous</button>
+        <span id="pageInfo">Page 1 of 1</span>
+        <button id="nextBtn" onclick="changePage(1)" disabled>Next</button>
+    </div>
+</div>
+
+<script>
+    let currentPage = 0;
+    const pageSize = 5; // Number of items per page
+
+    // Load products when the page loads
+    document.addEventListener("DOMContentLoaded", () => {
+        fetchProducts(currentPage);
+    });
+
+    // Handle Form Submission
+    document.getElementById("productForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        // Clear previous errors
+        document.getElementById("nameError").innerText = "";
+        document.getElementById("priceError").innerText = "";
+
+        const product = {
+            name: document.getElementById("name").value,
+            price: parseFloat(document.getElementById("price").value)
+        };
+
+        fetch('/api/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(product)
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw err; });
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert("Product added successfully!");
+            document.getElementById("productForm").reset();
+            fetchProducts(currentPage); // Reload table
+        })
+        .catch(errors => {
+            // Display validation errors returned from Spring Boot @RestControllerAdvice
+            if (errors.name) document.getElementById("nameError").innerText = errors.name;
+            if (errors.price) document.getElementById("priceError").innerText = errors.price;
+        });
+    });
+
+    // Fetch paginated data
+    function fetchProducts(page) {
+        fetch(`/api/products?page=${page}&size=${pageSize}`)
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById("productTableBody");
+                tbody.innerHTML = ""; // Clear existing rows
+
+                // Populate table
+                data.content.forEach(product => {
+                    const row = `<tr>
+                        <td>${product.id}</td>
+                        <td>${product.name}</td>
+                        <td>$${product.price.toFixed(2)}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+
+                // Update Pagination UI
+                currentPage = data.number;
+                document.getElementById("pageInfo").innerText = `Page ${data.number + 1} of ${data.totalPages || 1}`;
+                document.getElementById("prevBtn").disabled = data.first;
+                document.getElementById("nextBtn").disabled = data.last;
+            })
+            .catch(error => console.error('Error fetching products:', error));
+    }
+
+    // Handle Pagination Buttons
+    function changePage(direction) {
+        fetchProducts(currentPage + direction);
+    }
+</script>
+
+</body>
+</html>
