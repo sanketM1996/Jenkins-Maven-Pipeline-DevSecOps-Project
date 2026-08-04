@@ -289,8 +289,7 @@ stage("Publish to Nexus Repository Manager") {
                 // 📧 Email Notification
             emailext (
                 subject: "Pipeline ${buildStatus}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: """
-                    <p>Youtube Link :- https://www.youtube.com/@sanket </p>                                     
+                body: """                                    
                     <p>Maven App-tier DevSecops CICD pipeline status.</p>
                     <p>Project: ${env.JOB_NAME}</p>
                     <p>Build Number: ${env.BUILD_NUMBER}</p>
