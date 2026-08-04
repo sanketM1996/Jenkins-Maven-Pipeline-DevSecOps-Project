@@ -19,7 +19,7 @@ pipeline {
         NEXUS_REPOSITORY = "vprofile-repo"
         NEXUS_REPO_ID = "vprofile-repo"
         NEXUS_CREDENTIAL_ID = "nexuslogin"
-        ARTVERSION = "${env.BUILD_ID}"
+        ARTVERSION = "${env.BUILD_NUMBER}"
 
         // DOCKER_NAME  = 'harishnshetty/vprofile'
         registryCredential = 'ecr:ap-south-1:awscreds'
@@ -41,9 +41,9 @@ pipeline {
         }
 
         stage('BUILD') {
-            steps {
-                sh 'mvn clean install -DskipTests'
-            }
+           steps {
+        sh 'mvn clean install -DskipTests -Drevision=${BUILD_NUMBER}'
+    }
             post {
                 success {
                     echo 'Now Archiving...'
