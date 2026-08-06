@@ -20,8 +20,6 @@ pipeline {
         NEXUS_REPO_ID = "vprofile-repo"
         NEXUS_CREDENTIAL_ID = "nexuslogin"
         ARTVERSION = "${env.BUILD_NUMBER}"
-
-        // DOCKER_NAME  = 'harishnshetty/vprofile'
         registryCredential = 'ecr:ap-south-1:awscreds'
         IMAGE_NAME   = '932542905800.dkr.ecr.ap-south-1.amazonaws.com/vprofileappimg'               
         vprofileRegistry = "https://932542905800.dkr.ecr.ap-south-1.amazonaws.com"
